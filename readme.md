@@ -7,7 +7,7 @@ the parts being made.  They are usually made by the CAD team when parts
 are submitted for manufacturing.
 
 This program (written in python) reads a BOM in the form of an excel file,
-and generates a PDF that can be printed with post-it notes afficxed to the
+and generates a PDF that can be printed with post-it notes affixed to the
 paper before printing.  This method causes the post-it notes to be printed
 instead of hand-writen.
 
