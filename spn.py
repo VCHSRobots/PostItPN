@@ -24,6 +24,7 @@ with one of the sheets named 'bom'.  The sheet should have the following columns
    "Guild"          -- Optional, such as "CNC", "MACH", "BUILD", "CAD"
    "Machine"        -- Optional, such as "THOR", "TONY", "MILL", "LATH", "DORINGER", "HULK"
    "Group"          -- Optional, one or two letters, such as "A"
+   "Designer"       -- Optional, name of designer, such as "IShiraki"
 
 The output file is a PDF that prints on letter sized pages, and is formatted for
 2x2 inch post-it notes.  
@@ -113,6 +114,7 @@ def rddata(filename):
     Guild       = [""] * n
     Machine     = [""] * n
     Group       = [""] * n
+    Designer    = [""] * n
     if "Sub Number" in df.columns: SubNumber = df.get("Sub Number")
     if "Description" in df.columns: Description = df.get("Description")
     if "Material" in df.columns: Material = df.get("Material")
@@ -120,6 +122,7 @@ def rddata(filename):
     if "Guild" in df.columns: Guild = df.get("Guild")
     if "Machine" in df.columns: Machine = df.get("Machine")
     if "Group" in df.columns: Group = df.get("Group")
+    if "Designer" in df.columns: Designer = df.get("Designer")
     notes = [] 
     for i, pnx in enumerate(PartNumber): 
         iline = i + 2
@@ -147,6 +150,7 @@ def rddata(filename):
         info["Guild"] = get_value(Guild[i], 5, "Guild", pn, iline)
         info["Machine"] = get_value(Machine[i], 25, "Machine", pn, iline)
         info["Group"] = get_value(Group[i], 4, "Group", pn, iline) 
+        info["Designer"] = get_value(Designer[i], 16, "Designer", pn, iline)
         notes.append(info)
     return notes
 
@@ -193,11 +197,12 @@ def draw_note(data, location, pdf_canvas):
     elif data["Material"] != "":
         s = "Material: %s" + data["Material"]
     else: s = ""
-    y -= 0.4*inch
+    y -= 0.35*inch
     if s != "":
         pdf_canvas.setFont("Helvetica-Bold", 12.0)
         pdf_canvas.drawString(x + xm, y, s)
-    ymachine = y0 + 0.45  * inch 
+    ymachine = y0 + 0.5  * inch 
+    ydesigner = y0 + 0.22 * inch
     yguild   = y0 + 0.05 * inch
     ygroup   = y0 + 0.05 * inch
     ysubnum  = y0 + (ybox - 0.43) * inch
@@ -205,6 +210,7 @@ def draw_note(data, location, pdf_canvas):
     if data["Machine"] != "":  pdf_canvas.drawString(x + xm, ymachine, data["Machine"])
     if data["Guild"] != "":    pdf_canvas.drawString(x + xm, yguild, data["Guild"])
     if data["Group"] != "":    pdf_canvas.drawRightString(xr - xm, ygroup, data["Group"])
+    if data["Designer"] != "": pdf_canvas.drawRightString(xr - xm, ydesigner, data["Designer"])
     if data["Sub Number"] != "": 
         pdf_canvas.setFont("Helvetica-Bold", 11.0)
         pdf_canvas.drawRightString(xr - xm, ysubnum, data["Sub Number"])
